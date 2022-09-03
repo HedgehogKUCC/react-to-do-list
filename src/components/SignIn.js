@@ -1,10 +1,44 @@
-import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { apiPostUserSignIn } from '../api/index';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { useAuth } from './Context';
 
-function SignIn() {
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const fnOnSubmit = (data) => console.log(data);
+const MySwal = withReactContent(Swal);
+
+function SignIn({ setNickname }) {
+    const { token, setToken } = useAuth();
+    const navigate = useNavigate();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
+    const fnOnSubmit = (data) => {
+        const signInData = {
+            user: { ...data }
+        }
+        callApiPostUserSignIn(signInData);
+    }
+
+    async function callApiPostUserSignIn(data) {
+        try {
+            const res = await apiPostUserSignIn(data);
+            setToken(res.headers.authorization);
+            setNickname(res.data.nickname);
+        } catch (err) {
+            MySwal.fire(
+                {
+                    titleText: err.response.data.message,
+                    icon: 'error',
+                    showConfirmButton: false,
+                }
+            ).then(() => {
+                reset({
+                    email: "",
+                    password: "",
+                })
+            })
+        }
+    }
 
     return (
         <div className="bg-yellow">
@@ -18,7 +52,7 @@ function SignIn() {
                 <div>
                     <form className="formControls" onSubmit={handleSubmit(fnOnSubmit)}>
                         <h2 className="formControls_txt">最實用的線上代辦事項服務</h2>
-                        <label className="formControls_label" htmlFor="email">Email</label>
+                        <label className="formControls_label" htmlFor="email">電子信箱</label>
                         <input
                             type="text"
                             id="email"
@@ -49,8 +83,8 @@ function SignIn() {
                                     message: "密碼 欄位必填"
                                 },
                                 minLength: {
-                                    value: 8,
-                                    message: "密碼長度至少 8 碼"
+                                    value: 6,
+                                    message: "密碼長度至少 6 碼"
                                 }
                             })}
                         />
