@@ -2,13 +2,15 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { apiPostUserSignUp } from '../api/index';
+import { Link, useNavigate } from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
 function SignUp() {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const navigate = useNavigate();
+    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm();
     const fnOnSubmit = data => {
-        console.log('fnOnSubmit: ', data);
         const { email, nickname, password } = data;
         const signUpInfo = {
             user: {
@@ -17,35 +19,56 @@ function SignUp() {
                 password,
             }
         }
-        console.log('signUpInfo: ', signUpInfo);
+        callApiPostUserSignUp(signUpInfo);
     }
 
-    // console.log(watch("email")); // watch input value by passing the name of it
-
-    const callSignUpApi = (e) => {
-        console.log(e);
-        MySwal.fire({
-            title: <p>Hello World</p>,
-            didOpen: () => {
-                // `MySwal` is a subclass of `Swal` with all the same instance & static methods
-                MySwal.showLoading()
-            },
-        }).then(() => {
-            return MySwal.fire(<p>Shorthand works too</p>)
-        })
+    async function callApiPostUserSignUp(data) {
+        try {
+            const res = await apiPostUserSignUp(data);
+            MySwal.fire(
+                {
+                    titleText: res.data.message,
+                    icon: 'success',
+                    showConfirmButton: false,
+                    text: '立即前往登入'
+                }
+            ).then(() => {
+                navigate('/sign-in');
+            })
+        } catch (err) {
+            let listHtml = '';
+            err.response.data.error.forEach((item) => {
+                listHtml += `<li>${item}</li>`;
+            });
+            MySwal.fire(
+                {
+                    titleText: err.response.data.message,
+                    icon: 'error',
+                    showConfirmButton: false,
+                    html: `<ul style="color: red;">${listHtml}</ul>`
+                }
+            ).then(() => {
+                reset({
+                    email: "",
+                    nickname: "",
+                    password: "",
+                    confirm_password: "",
+                })
+            })
+        }
     }
 
     return (
         <div className="bg-yellow">
             <div className="container signUpPage vhContainer">
                 <div className="side">
-                    <a href="#">
+                    <Link to="/">
                         <img
                             className="logoImg"
                             src="https://upload.cc/i1/2022/03/23/rhefZ3.png"
                             alt=""
                         />
-                    </a>
+                    </Link>
                     <img
                         className="d-m-n"
                         src="https://upload.cc/i1/2022/03/23/tj3Bdk.png" alt="workImg"
@@ -54,7 +77,7 @@ function SignUp() {
                 <div>
                     <form className="formControls" onSubmit={handleSubmit(fnOnSubmit)}>
                         <h2 className="formControls_txt">註冊帳號</h2>
-                        <label className="formControls_label" htmlFor="email">Email</label>
+                        <label className="formControls_label" htmlFor="email">電子信箱</label>
                         <input
                             type="text"
                             id="email"
@@ -99,8 +122,8 @@ function SignUp() {
                                     message: "密碼 欄位必填"
                                 },
                                 minLength: {
-                                    value: 8,
-                                    message: "密碼長度至少 8 碼"
+                                    value: 6,
+                                    message: "密碼長度至少 6 碼"
                                 }
                             })}
                         />
@@ -129,7 +152,7 @@ function SignUp() {
                             className="formControls_btnSubmit"
                             value="註冊帳號"
                         />
-                        <a className="formControls_btnLink" href="#">登入</a>
+                        <Link to="/sign-in" className="formControls_btnLink">登入</Link>
                     </form>
                 </div>
             </div>
