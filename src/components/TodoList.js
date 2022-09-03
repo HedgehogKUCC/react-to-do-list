@@ -1,11 +1,51 @@
-function TodoList() {
+import { useNavigate } from "react-router-dom";
+import { apiDeleteUserSignOut } from '../api/index';
+import { useAuth } from './Context';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
+
+function TodoList({ nickname }) {
+    const { setToken } = useAuth();
+    const navigate = useNavigate();
+
+    const signOut = (e) => {
+        e.preventDefault();
+        callApiDeleteUserSignOut();
+    }
+
+    async function callApiDeleteUserSignOut() {
+        try {
+            const res = await apiDeleteUserSignOut();
+            MySwal.fire(
+                {
+                    titleText: `${res.data.message}成功`,
+                    icon: 'success',
+                    showConfirmButton: false,
+                }
+            ).then(() => {
+                setToken("");
+                navigate('/sign-in', { replace: true });
+            })
+        } catch (err) {
+            MySwal.fire(
+                {
+                    titleText: err.response.data.message,
+                    icon: 'error',
+                    showConfirmButton: false,
+                }
+            )
+        }
+    }
+
     return (
         <div className="bg-half">
             <nav>
                 <h1><a href="#">ONLINE TODO LIST</a></h1>
                 <ul>
-                    <li className="todo_sm"><a href="#"><span>王小明的代辦</span></a></li>
-                    <li><a href="#">登出</a></li>
+                    <li className="todo_sm"><a href="#"><span>{ nickname } 的代辦</span></a></li>
+                    <li><a href="#" onClick={signOut}>登出</a></li>
                 </ul>
             </nav>
             <div className="container todoListPage vhContainer">
