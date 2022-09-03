@@ -26,6 +26,8 @@ function TodoList({ nickname }) {
                 }
             ).then(() => {
                 setToken("");
+                localStorage.removeItem("todolist_token");
+                localStorage.removeItem("todolist_nickname");
                 navigate('/sign-in', { replace: true });
             })
         } catch (err) {

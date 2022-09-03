@@ -15,6 +15,10 @@ function App() {
 
     useEffect(() => {
         usersRequestInstance.defaults.headers.common["Authorization"] = token;
+        const todolist_token = localStorage.getItem("todolist_token") || "";
+        const todolist_nickname = localStorage.getItem("todolist_nickname") || "";
+        setToken(todolist_token);
+        setNickname(todolist_nickname);
     }, [token]);
 
     return (

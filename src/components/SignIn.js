@@ -23,7 +23,9 @@ function SignIn({ setNickname }) {
         try {
             const res = await apiPostUserSignIn(data);
             setToken(res.headers.authorization);
+            localStorage.setItem("todolist_token", res.headers.authorization);
             setNickname(res.data.nickname);
+            localStorage.setItem("todolist_nickname", res.data.nickname);
         } catch (err) {
             MySwal.fire(
                 {
