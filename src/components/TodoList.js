@@ -291,8 +291,8 @@ function TodoList({ nickname }) {
                                 </ul>
                                 <div className="todoList_statistics">
                                     <p>{
-                                        status === "pending" ? todos.filter((todo) => !todo.completed_at ).length : todos.filter((todo) => todo.completed_at ).length
-                                    } 個<span style={status === "pending" ? { color: 'red' } : {}}>{ status === "pending" ? '待' : '已' }</span>完成項目</p>
+                                        status === "completed" ? todos.filter((todo) => todo.completed_at ).length : todos.filter((todo) => !todo.completed_at ).length
+                                    } 個<span style={status !== "completed" ? { color: 'red' } : {}}>{ status === "completed" ? '已' : '待' }</span>完成項目</p>
                                     <a href="#" onClick={handleClickClearAll}>清除已完成項目</a>
                                 </div>
                             </div>
