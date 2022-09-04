@@ -8,6 +8,7 @@ import TodoList from "./components/TodoList";
 import CheckToken from "./components/CheckToken";
 import ProtectRoute from "./components/ProtectRoute";
 import { usersRequestInstance } from './api/users';
+import { todosRequestInstance } from './api/todos';
 
 function App() {
     const [ token, setToken ] = useState("");
@@ -15,6 +16,7 @@ function App() {
 
     useEffect(() => {
         usersRequestInstance.defaults.headers.common["Authorization"] = token;
+        todosRequestInstance.defaults.headers.common["Authorization"] = token;
         const todolist_token = localStorage.getItem("todolist_token") || "";
         const todolist_nickname = localStorage.getItem("todolist_nickname") || "";
         setToken(todolist_token);
