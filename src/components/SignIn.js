@@ -63,7 +63,7 @@ function SignIn({ setNickname }) {
                             {...register('email', {
                                 required: {
                                     value: true,
-                                    message: "Email 欄位必填"
+                                    message: "電子信箱 欄位必填"
                                 },
                                 pattern: {
                                     value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
