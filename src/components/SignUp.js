@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { apiPostUserSignUp } from '../api/index';
 import { Link, useNavigate } from "react-router-dom";
+import SignInUpSide from "./SignInUpSide";
 
 const MySwal = withReactContent(Swal);
 
@@ -61,19 +62,7 @@ function SignUp() {
     return (
         <div className="bg-yellow">
             <div className="container signUpPage vhContainer">
-                <div className="side">
-                    <Link to="/">
-                        <img
-                            className="logoImg"
-                            src="https://upload.cc/i1/2022/03/23/rhefZ3.png"
-                            alt=""
-                        />
-                    </Link>
-                    <img
-                        className="d-m-n"
-                        src="https://upload.cc/i1/2022/03/23/tj3Bdk.png" alt="workImg"
-                    />
-                </div>
+                <SignInUpSide />
                 <div>
                     <form className="formControls" onSubmit={handleSubmit(fnOnSubmit)}>
                         <h2 className="formControls_txt">註冊帳號</h2>

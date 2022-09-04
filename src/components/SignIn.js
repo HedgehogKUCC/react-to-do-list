@@ -4,6 +4,7 @@ import { apiPostUserSignIn } from '../api/index';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { useAuth } from './Context';
+import SignInUpSide from "./SignInUpSide";
 
 const MySwal = withReactContent(Swal);
 
@@ -45,12 +46,7 @@ function SignIn({ setNickname }) {
     return (
         <div className="bg-yellow">
             <div className="container loginPage vhContainer ">
-                <div className="side">
-                    <a href="#">
-                        <img className="logoImg" src="https://upload.cc/i1/2022/03/23/rhefZ3.png" alt="" />
-                    </a>
-                    <img className="d-m-n" src="https://upload.cc/i1/2022/03/23/tj3Bdk.png" alt="workImg" />
-                </div>
+                <SignInUpSide />
                 <div>
                     <form className="formControls" onSubmit={handleSubmit(fnOnSubmit)}>
                         <h2 className="formControls_txt">最實用的線上代辦事項服務</h2>
