@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import './App.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import { AuthContext } from "./components/Context";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
