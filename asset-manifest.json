@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/react-to-do-list/static/css/main.ab49231a.css",
-    "main.js": "/react-to-do-list/static/js/main.c03ad239.js",
+    "main.js": "/react-to-do-list/static/js/main.1ec4f86b.js",
     "static/js/787.97a945da.chunk.js": "/react-to-do-list/static/js/787.97a945da.chunk.js",
     "static/media/bootstrap-icons.woff?": "/react-to-do-list/static/media/bootstrap-icons.e559bf06bc84fd9525e6.woff",
     "static/media/bootstrap-icons.woff2?": "/react-to-do-list/static/media/bootstrap-icons.ea98e12d2d58747f9fc5.woff2",
     "index.html": "/react-to-do-list/index.html",
     "main.ab49231a.css.map": "/react-to-do-list/static/css/main.ab49231a.css.map",
-    "main.c03ad239.js.map": "/react-to-do-list/static/js/main.c03ad239.js.map",
+    "main.1ec4f86b.js.map": "/react-to-do-list/static/js/main.1ec4f86b.js.map",
     "787.97a945da.chunk.js.map": "/react-to-do-list/static/js/787.97a945da.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ab49231a.css",
-    "static/js/main.c03ad239.js"
+    "static/js/main.1ec4f86b.js"
   ]
 }
