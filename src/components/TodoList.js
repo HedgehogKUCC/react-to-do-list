@@ -14,10 +14,10 @@ import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 function List({ status, todo, callApiGetTodos }) {
-    const handleChangeCheck = (e, status) => {
+    const handleChangeCheck = (e) => {
         callApiPatchTodo(e.target.dataset.id, status);
     }
-    const handleClickDelete = (e, status) => {
+    const handleClickDelete = (e) => {
         e.preventDefault();
         callApiDeleteTodo(e.target.dataset.id, status);
     }
@@ -54,10 +54,10 @@ function List({ status, todo, callApiGetTodos }) {
     return (
         <li>
             <label className="todoList_label">
-                <input checked={ !!todo.completed_at } data-id={ todo.id } className="todoList_input" type="checkbox" onChange={(e) => handleChangeCheck(e, status)} />
+                <input checked={ !!todo.completed_at } data-id={ todo.id } className="todoList_input" type="checkbox" onChange={handleChangeCheck} />
                 <span>{ todo.content }</span>
             </label>
-            <a href="#" onClick={(e) => handleClickDelete(e, status)}>
+            <a href="#" onClick={handleClickDelete}>
                 <i data-id={ todo.id } className="bi bi-x-lg"></i>
             </a>
         </li>
@@ -98,8 +98,9 @@ function TodoList({ nickname }) {
     const handleInput = (e) => {
         setUserInput(e.target.value.trim());
     }
-    const handleClickAdd = (e, status) => {
+    const handleClickAdd = (e) => {
         e.preventDefault();
+
         if (!userInput) {
             MySwal.fire(
                 {
@@ -117,6 +118,28 @@ function TodoList({ nickname }) {
             }
         }
         callApiPostTodo(data, status);
+    }
+    const handleClickClearAll = (e) => {
+        e.preventDefault();
+        const delIds = [];
+        todos.forEach((todo) => {
+            if (todo.completed_at) {
+                delIds.push(todo.id);
+            }
+        })
+        if (delIds.length > 0) {
+            delIds.forEach((id) => {
+                callApiDeleteTodo(id, status);
+            })
+        } else {
+            MySwal.fire(
+                {
+                    titleText: "沒有已完成項目",
+                    icon: 'warning',
+                    showConfirmButton: false,
+                }
+            )
+        }
     }
 
     async function callApiDeleteUserSignOut() {
@@ -192,6 +215,20 @@ function TodoList({ nickname }) {
             )
         }
     }
+    async function callApiDeleteTodo(id, status) {
+        try {
+            await apiDeleteTodo(id);
+            callApiGetTodos(status);
+        } catch (err) {
+            MySwal.fire(
+                {
+                    titleText: err.response.data.message,
+                    icon: 'error',
+                    showConfirmButton: false,
+                }
+            )
+        }
+    }
 
     return (
         <div className="bg-half">
@@ -213,7 +250,7 @@ function TodoList({ nickname }) {
                             value={userInput}
                             onInput={handleInput}
                         />
-                        <a href="#" onClick={(e) => handleClickAdd(e, status)}>
+                        <a href="#" onClick={handleClickAdd}>
                             <i className="bi bi-plus-lg"></i>
                         </a>
                     </div>
@@ -224,42 +261,42 @@ function TodoList({ nickname }) {
                         </div>
                     }
                     {todos.length > 0 &&
-                    <div className="todoList_list">
-                        <ul className="todoList_tab">
-                            <li>
-                                <a
-                                    href="#"
-                                    className={status === 'all' ? 'active' : ''}
-                                    onClick={(e) => handleClickStatus(e, "all")}
-                                >全部</a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className={status === 'pending' ? 'active' : ''}
-                                    onClick={(e) => handleClickStatus(e, "pending")}
-                                >待完成</a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className={status === 'completed' ? 'active' : ''}
-                                    onClick={(e) => handleClickStatus(e, "completed")}
-                                >已完成</a>
-                            </li>
-                        </ul>
-                        <div className="todoList_items">
-                            <ul className="todoList_item">
-                                {filterTodos.map((todo) => <List todo={todo} status={status} callApiGetTodos={callApiGetTodos} key={todo.id} />)}
+                        <div className="todoList_list">
+                            <ul className="todoList_tab">
+                                <li>
+                                    <a
+                                        href="#"
+                                        className={status === 'all' ? 'active' : ''}
+                                        onClick={(e) => handleClickStatus(e, "all")}
+                                    >全部</a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="#"
+                                        className={status === 'pending' ? 'active' : ''}
+                                        onClick={(e) => handleClickStatus(e, "pending")}
+                                    >待完成</a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="#"
+                                        className={status === 'completed' ? 'active' : ''}
+                                        onClick={(e) => handleClickStatus(e, "completed")}
+                                    >已完成</a>
+                                </li>
                             </ul>
-                            <div className="todoList_statistics">
-                                <p>{
-                                    status === "pending" ? todos.filter((todo) => !todo.completed_at ).length : todos.filter((todo) => todo.completed_at ).length
-                                } 個<span style={status === "pending" ? { color: 'red' } : {}}>{ status === "pending" ? '待' : '已' }</span>完成項目</p>
-                                <a href="#">清除已完成項目</a>
+                            <div className="todoList_items">
+                                <ul className="todoList_item">
+                                    {filterTodos.map((todo) => <List todo={todo} status={status} callApiGetTodos={callApiGetTodos} key={todo.id} />)}
+                                </ul>
+                                <div className="todoList_statistics">
+                                    <p>{
+                                        status === "pending" ? todos.filter((todo) => !todo.completed_at ).length : todos.filter((todo) => todo.completed_at ).length
+                                    } 個<span style={status === "pending" ? { color: 'red' } : {}}>{ status === "pending" ? '待' : '已' }</span>完成項目</p>
+                                    <a href="#" onClick={handleClickClearAll}>清除已完成項目</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     }
                 </div>
             </div>
